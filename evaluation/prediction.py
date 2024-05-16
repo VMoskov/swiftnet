@@ -21,11 +21,15 @@ class StorePreds:
 
     def __call__(self, pred, batch, additional):
         b = self.to_img(batch)
-        for p, im, gt, name, subset in zip(pred, b['image'], b['original_labels'], b['name'], b['subset']):
-            store_img = np.concatenate([i.astype(np.uint8) for i in [im, self.to_color(p), gt]], axis=0)
+        # for p, im, gt, name, subset in zip(pred, b['image'], b['original_labels'], b['name'], b['subset']):
+        #     store_img = np.concatenate([i.astype(np.uint8) for i in [im, self.to_color(p), gt]], axis=0)
+        #     store_img = pimg.fromarray(store_img)
+        #     store_img.thumbnail((960, 1344))
+        #     store_img.save(f'{self.store_dir}/{subset}/{name}.jpg')
+        for p, name in zip(pred, b['name']):  # overwriting the original labels with the predictions
+            store_img = self.to_color(p).astype(np.uint8)
             store_img = pimg.fromarray(store_img)
-            store_img.thumbnail((960, 1344))
-            store_img.save(f'{self.store_dir}/{subset}/{name}.jpg')
+            store_img.save(f'{self.store_dir}/{name}.png')
 
 class StoreSubmissionPreds:
     def __init__(self, store_dir, remap, to_color=None, store_dir_color=None):

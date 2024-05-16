@@ -110,7 +110,8 @@ print(f'SPP params: {spp_params:,}')
 
 if evaluating:
     eval_loaders = [(loader_val, 'val'), (loader_train, 'train')]
-    store_dir = f'{dir_path}/out/'
+    # store_dir = f'{dir_path}/out/'
+    store_dir = f'{root}/gtFine/train/'
     for d in ['', 'val', 'train', 'training']:
         os.makedirs(store_dir + d, exist_ok=True)
     to_color = ColorizeLabels(color_info)
