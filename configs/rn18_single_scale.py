@@ -71,6 +71,7 @@ dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
 resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=scale)    # we are using resnet pretrained on Imagenet for faster convergence # noqa
 model = SemsegModel(resnet, num_classes)
 if evaluating:
+    model.criterion = SemsegCrossEntropy(num_classes=num_classes, ignore_id=ignore_id)
     model.load_state_dict(torch.load('weights/rn18_single_scale/model_best.pt'))        # change the path with your model path # noqa
 else:
     model.criterion = SemsegCrossEntropy(num_classes=num_classes, ignore_id=ignore_id)
