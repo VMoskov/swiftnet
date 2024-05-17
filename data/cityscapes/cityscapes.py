@@ -52,9 +52,9 @@ class Cityscapes(Dataset):
         self.epoch = epoch
 
         # semi-supervised
-        self.images = self.images[:len(self.images)//2]
+        self.images = self.images[len(self.images)//2:]
         if self.has_labels:
-            self.labels = self.labels[:len(self.labels)//2]
+            self.labels = self.labels[len(self.labels)//2:]
 
         print(f'Num images: {len(self)}')
 
