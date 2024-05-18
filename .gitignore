@@ -115,3 +115,5 @@ Temporary Items
  
 # ignore __pycache__
 **/__pycache__/**
+
+docs/
