@@ -19,7 +19,7 @@ root = Path('datasets/cityscapes')      # add symbolic link to datasets folder f
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
-evaluating = False                      # put to True if using the config only for evaluation of already trained model
+evaluating = True                      # put to True if using the config only for evaluation of already trained model
 # random_crop_size = 768                  # crop size, adjust it if having problems with GPU capacity
 random_crop_size = 448                  # crop size, adjust it if having problems with GPU capacity
 
@@ -72,7 +72,7 @@ resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=sc
 model = SemsegModel(resnet, num_classes)
 if evaluating:
     model.criterion = SemsegCrossEntropy(num_classes=num_classes, ignore_id=ignore_id)
-    model.load_state_dict(torch.load('weights/rn18_single_scale/model_best.pt'))        # change the path with your model path # noqa
+    model.load_state_dict(torch.load('weights/semi-supervised/50_percent/2024_05_14_13_12_01_rn18_single_scale/stored/model_best.pt'))        # change the path with your model path # noqa
 else:
     model.criterion = SemsegCrossEntropy(num_classes=num_classes, ignore_id=ignore_id)
     lr = 4e-4               # hyperparameres to change
@@ -110,7 +110,8 @@ print(f'Num params: {total_params:,} = {ran_params:,}(random init) + {ft_params:
 print(f'SPP params: {spp_params:,}')
 
 if evaluating:
-    eval_loaders = [(loader_val, 'val'), (loader_train, 'train')]
+    # eval_loaders = [(loader_val, 'val'), (loader_train, 'train')]
+    eval_loaders = [(loader_train, 'train')]
     # store_dir = f'{dir_path}/out/'
     store_dir = f'{root}/gtFine/train/'
     for d in ['', 'val', 'train', 'training']:
