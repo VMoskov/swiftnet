@@ -118,4 +118,6 @@ if evaluating:
         os.makedirs(store_dir + d, exist_ok=True)
     to_color = ColorizeLabels(color_info)
     to_image = Compose([DenormalizeTh(scale, mean, std), Numpy(), to_color])
-    eval_observers = [StorePreds(store_dir, to_image, to_color)]
+    remap = Cityscapes.id_to_map
+    remapper = RemapLabels(remap, ignore_id=255, ignore_class=ignore_id)
+    eval_observers = [StorePreds(store_dir, to_image, to_color, remapper)]
