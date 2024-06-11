@@ -22,15 +22,23 @@ class StorePreds:
         return ''
 
     def __call__(self, pred, batch, additional):
+        self.store_preds(pred, batch)  # store colored predictions
+        # self.store_trainid(pred, batch)  # store trainId labels
+
+    def store_preds(self, pred, batch):
         b = self.to_img(batch)
-        # for p, im, gt, name, subset in zip(pred, b['image'], b['original_labels'], b['name'], b['subset']):
-        #     store_img = np.concatenate([i.astype(np.uint8) for i in [im, self.to_color(p), gt]], axis=0)
-        #     store_img = pimg.fromarray(store_img)
-        #     store_img.thumbnail((960, 1344))
-        #     store_img.save(f'{self.store_dir}/{subset}/{name}.jpg')
+        for p, im, gt, name, subset in zip(pred, b['image'], b['original_labels'], b['name'], b['subset']):
+            # TODO: Fix the leftImg8bit image being distorted
+            # store_img = np.concatenate([i.astype(np.uint8) for i in [im, self.to_color(p), gt]], axis=0)
+            store_img = np.concatenate([i.astype(np.uint8) for i in [self.to_color(p), gt]], axis=0)
+            store_img = pimg.fromarray(store_img)
+            # store_img.thumbnail((960, 1344))
+            # store_img.thumbnail((640, 896))
+            store_img.save(f'{self.store_dir}/{subset}/{name}.jpg')
+    
+    def store_trainid(self, pred, batch):
+        b = self.to_img(batch)
         for p, name in zip(pred, b['name']):  # overwriting the original labels with the predictions
-            # store_img = self.to_color(p).astype(np.uint8)
-            # store_img = np.array(store_img.convert('L'))
             p = p.to(torch.int)
             store_img = self.remap(p)
             store_img = pimg.fromarray(store_img)
