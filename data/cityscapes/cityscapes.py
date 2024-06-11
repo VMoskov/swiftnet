@@ -47,14 +47,22 @@ class Cityscapes(Dataset):
         self.open_depth = open_depth
         self.images = list(sorted(self.images_dir.glob('*/*.png')))
         if self.has_labels:
-            self.labels = list(sorted(self.labels_dir.glob('*/*labelIds.png')))
+            self.labels = list(sorted(self.labels_dir.glob('*labelIds.png')))
+            self.labels += list(sorted(self.labels_dir.glob('*/*labelIds.png')))  # for valset
         self.transforms = transforms
         self.epoch = epoch
 
         # semi-supervised
-        self.images = self.images[len(self.images)//2:]
+
+        # first half -> used for training
+        self.images = self.images[:len(self.images)//4]
         if self.has_labels:
-            self.labels = self.labels[len(self.labels)//2:]
+            self.labels = self.labels[:len(self.labels)//4]
+
+        # second half -> used for generating new labels
+        # self.images = self.images[len(self.images)//2:]
+        # if self.has_labels:
+        #     self.labels = self.labels[len(self.labels)//2:]
 
         print(f'Num images: {len(self)}')
 

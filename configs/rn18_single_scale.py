@@ -19,7 +19,7 @@ root = Path('datasets/cityscapes')      # add symbolic link to datasets folder f
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
-evaluating = True                      # put to True if using the config only for evaluation of already trained model
+evaluating = False                      # put to True if using the config only for evaluation of already trained model
 # random_crop_size = 768                  # crop size, adjust it if having problems with GPU capacity
 random_crop_size = 448                  # crop size, adjust it if having problems with GPU capacity
 
@@ -79,7 +79,7 @@ else:
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 125
+    epochs = 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
@@ -94,7 +94,7 @@ batch_size = 14             # batch size should be reduced if your GPU is not bi
 print(f'Batch size: {batch_size}')
 
 if evaluating:
-    loader_train = DataLoader(dataset_train, batch_size=1, collate_fn=custom_collate)
+    loader_train = DataLoader(dataset_train, batch_size=1, collate_fn=custom_collate)  # dataset train for semi supervised
 else:
     loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True, num_workers=4,
                               pin_memory=True,
@@ -113,7 +113,7 @@ if evaluating:
     # eval_loaders = [(loader_val, 'val'), (loader_train, 'train')]
     eval_loaders = [(loader_train, 'train')]
     # store_dir = f'{dir_path}/out/'
-    store_dir = f'{root}/gtFine/train/'
+    store_dir = f'{root}/gtFine/train/tmp/'
     for d in ['', 'val', 'train', 'training']:
         os.makedirs(store_dir + d, exist_ok=True)
     to_color = ColorizeLabels(color_info)
