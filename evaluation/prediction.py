@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from PIL import Image as pimg
 
 __all__ = ['StorePreds', 'StoreSubmissionPreds']
@@ -30,8 +31,10 @@ class StorePreds:
         for p, name in zip(pred, b['name']):  # overwriting the original labels with the predictions
             # store_img = self.to_color(p).astype(np.uint8)
             # store_img = np.array(store_img.convert('L'))
+            p = p.to(torch.int)
             store_img = self.remap(p)
             store_img = pimg.fromarray(store_img)
+            name = name.replace('leftImg8bit', 'gtFine_labelIds')
             store_img.save(f'{self.store_dir}/{name}.png')
 
 
