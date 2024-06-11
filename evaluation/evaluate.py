@@ -57,7 +57,7 @@ def mt(sync=False):
     return 1000 * perf_counter()
 
 
-def evaluate_semseg(model, data_loader, class_info, observers=()):
+def evaluate_semseg(model, data_loader, class_info, observers=(), example=False):
     model.eval()
     conf_matrix = ConfusionMatrix(task="multiclass", num_classes=model.num_classes)
     managers = [torch.no_grad()] + list(observers)
@@ -71,6 +71,8 @@ def evaluate_semseg(model, data_loader, class_info, observers=()):
             pred = torch.argmax(logits.data, dim=1).int().cpu()
             for o in observers:
                 o(pred, batch, additional)
+            if example:
+                return
             if model.criterion.ignore_id != -100:
                 valid_idx = batch["original_labels"] != model.criterion.ignore_id
                 pred = pred[valid_idx]
