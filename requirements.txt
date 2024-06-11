@@ -1,6 +1,8 @@
-Pillow
-torch
-torchvision
-numpy
-tqdm
-torchmetrics
+numpy==1.26.4
+opencv_python==4.9.0.80
+Pillow==10.3.0
+scipy==1.13.1
+torch==2.3.0
+torchmetrics==1.4.0.post0
+torchvision==0.18.0
+tqdm==4.66.4
