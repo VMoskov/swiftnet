@@ -117,4 +117,4 @@ Temporary Items
 **/__pycache__/**
 
 docs/*.docx
-docs/**.png
+docs/**/**.png
